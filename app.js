@@ -23,7 +23,7 @@ var url = 'mongodb://localhost:27017/test';
 MongoClient.connect(url, (err,db) => {
   assert.equal(null, err);
   console.log('Connected directly to the server');
-  insertDocuments(db, {'text':'Health nuts with milks at 4pm'}, () => {
+  insertDocuments(db, {'text':'Healthy nuts with milk at 4pm'}, () => {
     db.close();
   });
 });
