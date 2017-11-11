@@ -1,4 +1,4 @@
-var MongoClient = require('mongodb').MongoClient,
+var {MongoClient, ObjectID} = require('mongodb'),
       assert = require('assert');
 
 var insertDocuments = (db, collectionName, data, callback) => {
@@ -22,6 +22,15 @@ var findDocuments = (db, collectionName, findExpr, callback) => {
   callback();
 }
 
+var updateDocument = (db, collectionName, filterExpr, updateExpr, callback) => {
+  var collection = db.collection(collectionName);
+  collection.findOneAndUpdate(filterExpr, updateExpr).then((result) => {
+    console.log(JSON.stringify(result, undefined, 2));
+  });
+  callback();
+}
+
+
 var deleteDocument = (db, collectionName, expr, callback) => {
   var collection = db.collection(collectionName);
   collection.deleteOne(expr).then((result) => {
@@ -37,13 +46,18 @@ MongoClient.connect(url, (err,db) => {
   assert.equal(null, err);
   console.log('Connected directly to the server');
 
-  findDocuments(db, 'Todos', {text:/Lunch/}, () => {
-//    db.close();
-  });
+  // findDocuments(db, 'Todos', {text:/Lunch/}, () => {
+  //   db.close();
+  // });
 
-  deleteDocument(db, 'Todos', {text:/Play/}, () => {
+  updateDocument(db, 'Todos', {_id: new ObjectID('5a070b05583a9b50d44dbc8d')},
+    {$set : {text : 'Healthy nuts and berries with milk @4pm'}}, () => {
     db.close();
   });
+
+  // deleteDocument(db, 'Todos', {text:/Play/}, () => {
+  //   db.close();
+  // });
   // insertDocuments(db, 'Todos', {'text':'Healthy nuts with milk at 4pm'}, () => {
   //   db.close();
   // });
